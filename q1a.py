@@ -27,7 +27,7 @@ plt.axis([0,np.shape(data)[1],0,np.shape(data)[0]])
 plt.title("mirrored and zero-padded coloumn density map")
 #plt.title("mirrored coloumn density map")
 
-#plt.savefig("brick_mirrored_padded.pdf")
+plt.savefig("b2rick_mirrored_padded.pdf")
 print("About to save as pdf")
 plt.show()
 
