@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 import numpy as np
 import pdb
 from astropy.io import fits
@@ -5,14 +6,10 @@ import matplotlib.pyplot as plt
 import pyfftw
 
 brick = fits.open("brick.fits")
-
 data = brick[0].data
 
 print("Creating brick.pdf")
-
 plt.imshow(data, origin='upper')
-plt.pcolormesh(data)
-plt.axis([0,np.shape(data)[1],0,np.shape(data)[0]])
 plt.colorbar()
 plt.title("coloumn density map")
 plt.savefig("brick.pdf")
@@ -20,16 +17,12 @@ plt.clf()
 
 data = np.hstack((data, np.fliplr(data)))
 data = np.vstack((data, np.flipud(data)))
-#print(np.shape(data))
 
 margin = (np.shape(data)[0] - np.shape(data)[1])/2
-#print(margin)
 
 print("Creating brick_mirrored.pdf")
 
 plt.imshow(data, origin='upper')
-plt.pcolormesh(data)
-plt.axis([0,np.shape(data)[1],0,np.shape(data)[0]])
 plt.colorbar()
 plt.title("mirrored coloumn density map")
 plt.savefig("brick_mirrored.pdf")
@@ -39,8 +32,6 @@ data = np.lib.pad(data, ((0,0),(margin, margin)), 'constant', constant_values=(0
 
 print("Creating brick_mirrored_padded.pdf")
 plt.imshow(data, origin='upper')
-plt.pcolormesh(data)
-plt.axis([0,np.shape(data)[1],0,np.shape(data)[0]])
 plt.colorbar()
 plt.title("mirrored and zero-padded coloumn density map")
 plt.savefig("brick_mirrored_padded.pdf")
@@ -55,6 +46,7 @@ plt.imshow(np.log10(fft))
 plt.title('Fourier image of column density map')
 plt.colorbar()
 plt.savefig("brick_fourier_image.pdf")
+plt.clf()
 
 #Q6
 
@@ -68,9 +60,6 @@ for n in range(0, max_dim):
 
 # this is our 2d array with absolute value of k vectors
 k_image = np.sqrt(k1*k1 + k2*k2)
-
-plt.imshow(k_image)
-plt.show()
 
 Pk = np.zeros(max_dim/2 + 1)
 k = np.linspace(0, max_dim/2, num=max_dim/2+1)
