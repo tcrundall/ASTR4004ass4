@@ -22,8 +22,18 @@ def simulate_v(t_min=0, t_max=1.5, a_in=[0,1,1,1,0], n_points=100, sigma=0.5):
     return times, v_with_errors
     
 def lnprob_v_func(a_try, times, vs, sigma=1.0):
+    
     #Compute chi-squared, and return -chi-squared/2
-    return 0
+    # - may need to take log of result
+    # - higher is better
+    # - note that I haven't used sigma for anything
+
+    chi_s = 0
+    v_fit = v_func(a_try, times)
+    for i in range(len(times)):
+      chi_s += (vs[i] - v_fit[i])**2 / v_fit[i]
+
+    return - chi_s / 2.0
 
 if __name__=="__main__":  
     #Simulate our data
@@ -38,12 +48,13 @@ if __name__=="__main__":
     #Lets make a starting point as a bunch of random numbers
     a_init = np.random.normal( size=(nwalkers,ndim) )
 
-    #sampler = INSERT_CODE
+    sampler = emcee.EnsembleSampler(nwalkers, ndim, lnprob_v_func, args=[times, v_with_errors])
     pos, lnprob, state = sampler.run_mcmc(a_init, n_burnin)
 
     #A check plot, to see if burn in is complete.
-    #plt.plot(sampler.lnprobability.T)
-    #plt.title("Is burn in complete?")
+    plt.plot(sampler.lnprobability.T)
+    plt.title("Is burn in complete?")
+    plt.show()
 
     #Some helper code to help eliminate the worst chains: 
     best_chain = np.argmax(lnprob)
@@ -58,6 +69,7 @@ if __name__=="__main__":
     #Use plt.hist or even http://corner.readthedocs.io/en/latest/
     #to examine the outputs:
     #sampler.chain
-    #sampler.flatchain (if you're feeling lazy)
+    sampler.flatchain #(if you're feeling lazy)
     #e.g. 
-    #plt.hist(sampler.flatchain[:,0])
+    plt.hist(sampler.flatchain[:,0])
+    plt.show()
