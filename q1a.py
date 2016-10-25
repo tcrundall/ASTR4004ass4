@@ -6,44 +6,55 @@ import pyfftw
 
 brick = fits.open("brick.fits")
 
-print(brick.info())
-
 data = brick[0].data
 
-print(np.shape(data))
-# 638  x 429
-# vert x horz
+print("Creating brick.pdf")
+
+plt.imshow(data, origin='upper')
+plt.pcolormesh(data)
+plt.axis([0,np.shape(data)[1],0,np.shape(data)[0]])
+plt.colorbar()
+plt.title("coloumn density map")
+plt.savefig("brick.pdf")
+plt.clf()
 
 data = np.hstack((data, np.fliplr(data)))
 data = np.vstack((data, np.flipud(data)))
-print(np.shape(data))
+#print(np.shape(data))
 
 margin = (np.shape(data)[0] - np.shape(data)[1])/2
-print(margin)
+#print(margin)
+
+print("Creating brick_mirrored.pdf")
+
+plt.imshow(data, origin='upper')
+plt.pcolormesh(data)
+plt.axis([0,np.shape(data)[1],0,np.shape(data)[0]])
+plt.colorbar()
+plt.title("mirrored coloumn density map")
+plt.savefig("brick_mirrored.pdf")
+plt.clf()
+
 data = np.lib.pad(data, ((0,0),(margin, margin)), 'constant', constant_values=(0,0))
 
-#plt.imshow(data, origin='upper')
-#plt.pcolormesh(data)
-#plt.axis([0,np.shape(data)[1],0,np.shape(data)[0]])
-#plt.colorbar()
-#plt.title("mirrored and zero-padded coloumn density map")
-#plt.title("mirrored coloumn density map")
-
-#plt.savefig("b2rick_mirrored_padded.pdf")
-print("About to save as pdf")
-#plt.show()
+print("Creating brick_mirrored_padded.pdf")
+plt.imshow(data, origin='upper')
+plt.pcolormesh(data)
+plt.axis([0,np.shape(data)[1],0,np.shape(data)[0]])
+plt.colorbar()
+plt.title("mirrored and zero-padded coloumn density map")
+plt.savefig("brick_mirrored_padded.pdf")
+plt.clf()
 
 f = pyfftw.interfaces.numpy_fft.fft2(data)
 fshift = pyfftw.interfaces.numpy_fft.fftshift(f)
-#magnitude_spectrum = fshift
-#magnitude_spectrum = np.log10(np.abs(f))
 fft = abs(fshift)**2
 
+print("Creating brick_fourier_image.pdf")
 plt.imshow(np.log10(fft))
 plt.title('Fourier image of column density map')
 plt.colorbar()
-#plt.savefig("fourier-image.pdf")
-plt.show()
+plt.savefig("brick_fourier_image.pdf")
 
 #Q6
 
@@ -68,10 +79,11 @@ for ik, k_val in enumerate(k):
     indices_in_k_shell = np.where((k_image >= ik) & (k_image < ik+1))
     Pk[ik] = 2*np.pi * k_val * np.sum(fft[indices_in_k_shell])
 
+print("Creating brick_power_spectrum.pdf")
 plt.plot(Pk)
 plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('k')
 plt.ylabel('P(k)')
-plt.show()
 plt.savefig("brick_power_spectrum.pdf")
+plt.clf()
