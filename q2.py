@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
-import assignment_hints as ah
+#import assignment_hints as ah
+import ah
 import matplotlib.pyplot as plt
 import numpy as np
 
