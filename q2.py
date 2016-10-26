@@ -14,7 +14,7 @@ x=np.linspace(min(times), max(times), 100)
 
 plt.plot(times, v_with_errors, 'o')
 plt.plot(x, ah.v_func(a_true, x))
-plt.plot(x, ah.v_func(a_false, x))
+plt.savefig("figure1.pdf")
 plt.show()
 
 print(ah.lnprob_v_func(a_true, times, v_with_errors))

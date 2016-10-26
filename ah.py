@@ -25,8 +25,8 @@ def simulate_v(t_min=0, t_max=1.5, a_in=[0,1,1,1,0], n_points=100, sigma=0.5):
 
 def prior(a):
     return (-2 < a[0] and a[0] < 2 and -2 < a[1] and a[1] < 2 and
-            0 < a[2] and a[2] < 2 and -2 < a[3] and a[3] < 2 and
-            -0.5 < a[4] and a[4] < 0.5)
+            -2 < a[2] and a[2] < 2 and 0 < a[3] and a[3] < 2 and
+            -0.25 < a[4] and a[4] < 0.25)
 
 def lnprob_v_func(a_try, times, vs, sigma=1.0):
     
@@ -92,7 +92,7 @@ if __name__=="__main__":
     #sampler.chain
     sampler.flatchain #(if you're feeling lazy)
     #e.g. 
-    if (True):
+    if (False):
         for i in range(5):
             plt.hist(sampler.flatchain[:,i])
             plt.show()
